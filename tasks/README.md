@@ -33,7 +33,7 @@ model-independent, so the model only affects candidate quality and narration.
 
 | Task | Cron (CRON_TZ=America/Toronto) | Runs | Model |
 |---|---|---|---|
-| Market check | `35 9 * * 1-5` | `run.py digest` | **Sonnet** |
+| Market check | `35 9 * * 1-5` | `run.py holdings` + `run.py digest` | **Sonnet** |
 | Opportunity scan | `0 10 * * 0` (Sun, Neeraj cadence) | `run.py scan <tickers>` | **Opus** |
 | Aggressive scan | `45 9 * * 1-5` + `0 16 * * 1-5` | `run.py aggressive <tickers>` | **Opus** |
-| Weekly review | `0 18 * * 0` | engine + Notion history | **Sonnet** |
+| Weekly review | `0 18 * * 0` | `run.py holdings` + Notion history → trade proposals | **Sonnet** |

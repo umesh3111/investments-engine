@@ -23,9 +23,10 @@ Workspace: **Umesh Sharma's Notion** (umesh.sh31@gmail.com). Created private (dr
 | Working Notes | `41633724-e57f-81a3-baca-ea6b935e8085` |
 
 ## Schemas (US-only, engine-adapted)
-- **Holdings**: Name, Ticker, Status(Active/Exited), Shares, Avg Price, Invested,
-  Value, **Stance(ADD/HOLD/TRIM/SELL/WATCH)**, Stance line, Entry, Stop, Trim 1,
-  Target, Conviction, Last synced.
+- **Holdings** (synced from IBKR by Market check): Name, Ticker, Status(Active/Exited),
+  Shares, Avg Price, Invested, Value, P&L %, % of NAV, **Stance(ADD/HOLD/TRIM/SELL/WATCH)**
+  (= engine position-rule view), Stance line, Engine stance, Entry, Entry date, Stop,
+  Trim 1, Trim 2, Target, AI exposure, Conviction, Last synced. Row "Cash (IBKR)" = cash.
 - **Ideas**: Name, Ticker, Sector, Stage(Scanned/Researching/Buy/Wait/Drop),
   **Stance(STRONG BUY/BUY/WATCH/AVOID)**, Conviction, Status line, Price, Entry,
   Stop, Target, Last checked, Next check.
@@ -33,7 +34,7 @@ Workspace: **Umesh Sharma's Notion** (umesh.sh31@gmail.com). Created private (dr
   Done, Priority.
 - **Journal**: Name, Kind(Market check/Scan/Aggressive/Weekly/Trade/Research), Date,
   Regime, Portfolio value, Change %, Action, Ticker, Qty, Price, Go No-Go,
-  Executed, Review due.
+  Executed, Review due, **Trade ID** (IBKR dedupe key), Realized P&L, Engine view.
 
 ## Paste-in kit (repo)
 - `engine-py/setup.sh` → cloud-env setup script
@@ -44,3 +45,8 @@ Workspace: **Umesh Sharma's Notion** (umesh.sh31@gmail.com). Created private (dr
 - Two-way relations (Holdings↔Ideas, Agenda→Holdings/Ideas/Journal) via
   update_data_source.
 - Google Calendar (Agenda rows → events).
+
+## IBKR (read-only Flex)
+Cloud env vars: `IBKR_FLEX_TOKEN`, `IBKR_FLEX_QUERY_ID`. Activity Flex Query (XML,
+Last 365 Calendar Days): Open Positions, Trades (Execution), Cash Report, NAV in Base,
+Change in NAV. `python3 run.py holdings`. The token reads statements only — no orders.

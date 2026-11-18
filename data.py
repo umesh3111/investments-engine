@@ -41,6 +41,7 @@ def fetch_bars(ticker: str, days: int = 400) -> List[dict]:
     for row in df.itertuples():
         try:
             bars.append({
+                "date": row.Index.date().isoformat(),  # for peak-since-entry (holdings)
                 "high": float(row.High), "low": float(row.Low),
                 "close": float(row.Close), "volume": int(row.Volume or 0),
             })

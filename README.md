@@ -27,3 +27,12 @@ confirmation. Every row is tagged SPND/SUPP/MEM/NEO/PWR. It prints a header line
 in the digest/scans and a `capex` block in the JSON — it **never changes a stance**.
 Stage 2 (a WATCH cap on suppliers/neoclouds in a decelerating cycle) only after a
 backtest. Yahoo fundamentals have gaps; comparisons are like-for-like by date.
+
+## Holdings (IBKR, read-only)
+`python3 run.py holdings` pulls positions, fills, cash and NAV from an IBKR **Flex**
+statement (token + query id in the cloud env; the token can't trade) and grades each
+US position with the engine + position rules from the old position manager: hard
+stop, peak-based stop ratchet, trim 1/2 + target, pyramid window, thesis check,
+earnings-in-5-days flag. View = SELL/TRIM/ADD/HOLD/WATCH. Market check syncs it to
+Notion Holdings and logs fills as Journal Trade rows (deduped on Trade ID); Weekly
+review turns views + concentration into Pending trade proposals for your go/no-go.

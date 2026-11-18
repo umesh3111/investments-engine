@@ -6,8 +6,10 @@ twice. You (the LLM) are the wide funnel: pick a lens, propose candidates. The
 deterministic engine is the judge: it grades them. You never decide the trade.
 
 ## Inputs (set these to your book)
-- **Portfolio context:** _one sentence about the book — size, tilt, what it already
-  holds, so new ideas complement rather than duplicate._
+- **Portfolio context:** read it live — Notion **Holdings** (Active rows:
+  `collection://9c854975-fe10-4f78-81c4-bbec3715e721`), synced from IBKR each Market
+  check. Note size, cash %, sector tilt and AI-capex exposure, so new ideas
+  complement rather than duplicate. **Don't propose names already held.**
 - **Risk profile:** _your risk appetite — e.g. "swing trades, 2–3 week holds, max
   one new idea per scan, avoid pre-earnings."_
 

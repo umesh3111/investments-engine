@@ -12,7 +12,9 @@ weight *on top of* the engine.
    **propose ~30–50 fresh, aggressive US candidates** — higher-beta names, recent
    movers, theme leaders — that you'd want a louder lens on. US only, liquid.
    (Avoid names already in the Notion Ideas data source from the last few days:
-   `collection://4be9ec83-893c-4522-998f-1acd909e59ad`.)
+   `collection://4be9ec83-893c-4522-998f-1acd909e59ad`, and names already held —
+   Active rows in Holdings `collection://9c854975-fe10-4f78-81c4-bbec3715e721`.
+   Weigh fit against the book: if it's already heavy in AI-capex names, say so.)
 3. **Let the engine grade them with the aggressive profile:**
    `python3 run.py aggressive TICK1,TICK2,...` (comma-separated, no spaces). The
    aggressive profile fires on 2/4 with wider bands, so expect more names. It prints

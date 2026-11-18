@@ -7,6 +7,7 @@ parse to write Notion rows.
     python3 run.py scan                   # opportunity scan over the fallback UNIVERSE
     python3 run.py scan NVDA,AVGO,VRT,...  # grade an LLM-proposed candidate list (rotating lens)
     python3 run.py aggressive NVDA,AMD,... # same, aggressive profile
+    python3 run.py holdings               # IBKR positions (read-only Flex) graded by engine + position rules
 
 Rotating-lens discovery (Neeraj's way): the scheduled task's LLM picks a lens and
 proposes the candidate tickers, then passes them here as a comma-separated 3rd arg.
@@ -69,10 +70,34 @@ def parse_tickers(arg: str) -> list:
     return out
 
 
+def run_holdings_mode(reg: dict, date: str, capex) -> None:
+    import ibkr
+    from holdings import run_holdings, format_holdings
+    if not ibkr.configured():
+        print(f"💼 Book — {date}\nIBKR not configured (cloud env needs IBKR_FLEX_TOKEN + IBKR_FLEX_QUERY_ID).")
+        print("\n<<<JSON>>>")
+        print(json.dumps({"mode": "holdings", "configured": False, "date": date}))
+        return
+    try:
+        statement = ibkr.parse_statement(ibkr.fetch_statement())
+    except Exception as e:  # noqa: BLE001 — report, never crash the task
+        print(f"💼 Book — {date}\nIBKR fetch failed: {e}")
+        print("\n<<<JSON>>>")
+        print(json.dumps({"mode": "holdings", "configured": True, "error": str(e), "date": date}))
+        return
+    res = run_holdings(statement, reg["regime"])
+    print(format_holdings(res, capex, date))
+    print("\n<<<JSON>>>")
+    print(json.dumps({"mode": "holdings", "configured": True, "regime": reg, "capex": capex,
+                      "date": date, **res}, default=str))
+
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "digest"
     reg = current_regime()
     regime, date = reg["regime"], toronto_date()
+    if mode == "holdings":
+        return run_holdings_mode(reg, date, current_capex())
     aggressive = mode == "aggressive"
 
     if mode == "digest":
