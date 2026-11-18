@@ -26,9 +26,14 @@ read on top. **The LLM never changes the engine's numbers or stances.**
   keyed API (the only change). One bad ticker never stops a cycle (handled).
 
 ## The tasks (each pushes its own end-of-run notification)
-| Task | When (Toronto) | Runs | Pushes |
+Set the model in each task's model selector (claude.ai/code/routines). Opus on the
+scans (candidate discovery + forward read benefit from it); Sonnet on check/review
+(fixed watchlist + summarization — cheaper, plenty). The engine's decision is
+model-independent, so the model only affects candidate quality and narration.
+
+| Task | Cron (CRON_TZ=America/Toronto) | Runs | Model |
 |---|---|---|---|
-| Market check | 9:35 weekdays | `run.py digest` | watchlist table + read |
-| Opportunity scan | 9:40 + 15:55 weekdays | `run.py scan` | new ideas (WATCH+) |
-| Aggressive scan | 9:45 + 16:00 weekdays | `run.py aggressive` | aggressive, forward-looking |
-| Weekly review | Sun 18:00 | engine + Notion history | perf, regime, proposals |
+| Market check | `35 9 * * 1-5` | `run.py digest` | **Sonnet** |
+| Opportunity scan | `0 10 * * 0` (Sun, Neeraj cadence) | `run.py scan <tickers>` | **Opus** |
+| Aggressive scan | `45 9 * * 1-5` + `0 16 * * 1-5` | `run.py aggressive <tickers>` | **Opus** |
+| Weekly review | `0 18 * * 0` | engine + Notion history | **Sonnet** |
