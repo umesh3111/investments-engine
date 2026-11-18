@@ -129,7 +129,8 @@ def format_capex_line(capex: Optional[dict], tickers: Optional[List[str]] = None
 
 def _fetch_quarters(ticker: str) -> List[Quarter]:
     import yfinance as yf
-    cf = yf.Ticker(ticker).quarterly_cashflow
+    from data import with_retry
+    cf = with_retry(lambda: yf.Ticker(ticker).quarterly_cashflow)
     cap = cf.loc["Capital Expenditure"].dropna()
     ocf = cf.loc["Operating Cash Flow"] if "Operating Cash Flow" in cf.index else None
     out: List[Quarter] = []
@@ -144,7 +145,9 @@ def _fetch_quarters(ticker: str) -> List[Quarter]:
 def _smh_above_50() -> Optional[bool]:
     import yfinance as yf
     from ta import sma
-    closes = [float(c) for c in yf.Ticker("SMH").history(period="90d", interval="1d")["Close"].tolist()]
+    from data import with_retry
+    df = with_retry(lambda: yf.Ticker("SMH").history(period="90d", interval="1d"))
+    closes = [float(c) for c in df["Close"].tolist()]
     return closes[-1] > sma(closes, 50) if len(closes) >= 50 else None
 
 
