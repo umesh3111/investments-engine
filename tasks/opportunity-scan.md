@@ -46,5 +46,6 @@ decide & execute."
 - You widen the funnel (candidates); the engine decides (grades). Keep the candidate
   list ≤ ~50 so the run stays under time limits.
 - One bad/thinly-traded ticker never stops the scan — it just gets skipped.
-- Open and close are different tape — use a different lens each run, don't reuse the
-  morning's names.
+- Runs weekly (Sunday), but can be run on demand anytime. On a manual re-run, pick a
+  different lens from the last one and skip recently-scanned names (step 3) so it
+  keeps rotating instead of repeating.
