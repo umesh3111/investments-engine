@@ -1,8 +1,11 @@
 #!/bin/bash
-# Cloud-environment setup script for the Claude Code scheduled task.
-# Paste into the task's Cloud environment > Setup script.
-# Python 3 + pip are pre-installed and the engine code comes from this cloned
-# repo, so this only installs the data deps. The engine + TA are stdlib-only.
-pip install --break-system-packages --quiet yfinance pyxirr
-python3 -c "import yfinance as y; print('yfinance ok:', y.Ticker('SPY').history(period='5d').shape)" || echo "setup: yfinance smoke test failed" >&2
-echo "deps installed — run: python3 run.py digest"
+# Cloud-environment setup for the Claude Code scheduled task.
+# Installs data deps into the SAME python3 that runs the engine. Requires the
+# environment's Network access = Full (or Limited with "Allow package managers"
+# checked). Engine + TA are stdlib-only; only data/regime need yfinance.
+set -e
+python3 -m pip install --break-system-packages --quiet --upgrade pip || true
+python3 -m pip install --break-system-packages --quiet yfinance pyxirr
+# Verify the import in the exact interpreter the task will use.
+python3 -c "import yfinance as y; print('yfinance ok:', y.Ticker('SPY').history(period='5d').shape)"
+echo "setup done — run: python3 run.py digest"
