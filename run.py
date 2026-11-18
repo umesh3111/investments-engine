@@ -3,11 +3,15 @@ CLI the scheduled tasks call. Computes regime, runs the deterministic engine ove
 a ticker set, prints the formatted message AND a JSON block the task's agent can
 parse to write Notion rows.
 
-    python3 run.py digest       # watchlist morning table
-    python3 run.py scan         # universe opportunity scan (new ideas)
-    python3 run.py aggressive   # universe, aggressive profile
+    python3 run.py digest                 # watchlist morning table
+    python3 run.py scan                   # opportunity scan over the fallback UNIVERSE
+    python3 run.py scan NVDA,AVGO,VRT,...  # grade an LLM-proposed candidate list (rotating lens)
+    python3 run.py aggressive NVDA,AMD,... # same, aggressive profile
 
-The agent then adds its forward-looking read and sends to Telegram / Notion.
+Rotating-lens discovery (Neeraj's way): the scheduled task's LLM picks a lens and
+proposes the candidate tickers, then passes them here as a comma-separated 3rd arg.
+The engine still grades every candidate deterministically — the LLM only widens the
+funnel, it never decides. With no list passed, scan/aggressive fall back to UNIVERSE.
 """
 from __future__ import annotations
 import sys
@@ -39,12 +43,29 @@ def toronto_date() -> str:
     return datetime.now(ZoneInfo("America/Toronto")).strftime("%Y-%m-%d")
 
 
+def parse_tickers(arg: str) -> list:
+    """Split, upper-case, de-dupe (preserve order) an LLM-proposed candidate list."""
+    seen, out = set(), []
+    for t in arg.replace(" ", ",").split(","):
+        t = t.strip().upper()
+        if t and t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out
+
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "digest"
     reg = current_regime()
     regime, date = reg["regime"], toronto_date()
     aggressive = mode == "aggressive"
-    tickers = WATCHLIST if mode == "digest" else UNIVERSE
+
+    if mode == "digest":
+        tickers = WATCHLIST
+    elif len(sys.argv) > 2 and sys.argv[2].strip():
+        tickers = parse_tickers(sys.argv[2])  # LLM-proposed rotating-lens candidates
+    else:
+        tickers = UNIVERSE  # fallback when no candidate list is passed
 
     rows = run_cycle(tickers, regime=regime, aggressive=aggressive)
 

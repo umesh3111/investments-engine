@@ -6,14 +6,18 @@ weight *on top of* the engine.
 
 **Steps.**
 1. `python3 -c 'import yfinance'` to confirm the cloud env.
-2. Run `python3 run.py aggressive`. This uses the **aggressive profile**
-   (fires on 2/4, wider bands, higher tier caps), so expect more names. It prints
-   the table + `<<<JSON>>>`.
-3. **The engine sets the entries, stops and targets — keep them.** Your added value
-   is the *forward paradigm read*: infer it yourself from recent news, macro and
-   sector rotation (e.g. post-election backdrop, rate path, which sectors are
-   leading), and rank/annotate the engine's aggressive candidates by how well they
-   fit that paradigm. Flag ones you'd pass on despite the engine, and say why.
+2. **Infer today's forward paradigm** yourself from recent news, macro and sector
+   rotation (rate path, which sectors lead, current themes). From that paradigm,
+   **propose ~30–50 fresh, aggressive US candidates** — higher-beta names, recent
+   movers, theme leaders — that you'd want a louder lens on. US only, liquid.
+   (Avoid names already in the Notion Ideas data source from the last few days:
+   `collection://4be9ec83-893c-4522-998f-1acd909e59ad`.)
+3. **Let the engine grade them with the aggressive profile:**
+   `python3 run.py aggressive TICK1,TICK2,...` (comma-separated, no spaces). The
+   aggressive profile fires on 2/4 with wider bands, so expect more names. It prints
+   the table + `<<<JSON>>>`. **The engine sets the entries, stops and targets —
+   keep them.** Then rank/annotate the candidates that cleared by how well they fit
+   your paradigm, and flag any you'd pass on despite the engine, with why.
 4. Label everything "⚡ Aggressive read" and keep it clearly separate from the
    deterministic table. Honest uncertainty allowed; no false confidence.
 5. Your **end-of-run message is the push notification** — the aggressive table +
