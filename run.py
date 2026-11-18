@@ -27,9 +27,9 @@ from regime import current_regime
 from cycle import run_cycle, format_digest, format_opportunities
 
 WATCHLIST = [
-    "AAPL", "MSFT", "NVDA", "GOOGL", "META", "AMZN", "AVGO", "TSLA", "AMD", "NFLX",
-    "PLTR", "UBER", "COIN", "MU", "INTC", "IBKR", "LLY", "PANW", "CRCL", "MSTR",
-    "APP", "NBIS", "SNDK", "WLDN",
+    "AAPL", "MSFT", "NVDA", "GOOG", "GOOGL", "META", "AMZN", "AVGO", "TSLA", "AMD",
+    "NFLX", "PLTR", "UBER", "COIN", "MU", "INTC", "IBKR", "LLY", "PANW", "CRCL",
+    "MSTR", "APP", "NBIS", "SNDK", "WLDN", "ADI", "CRWV", "SPCX", "SKHY",
 ]
 # Universe "new ideas" beyond the watchlist.
 UNIVERSE = [
