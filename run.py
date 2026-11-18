@@ -25,12 +25,27 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from regime import current_regime
 from cycle import run_cycle, format_digest, format_opportunities
+from capex import current_capex
 
-WATCHLIST = [
+# Original core list.
+CORE = [
     "AAPL", "MSFT", "NVDA", "GOOG", "GOOGL", "META", "AMZN", "AVGO", "TSLA", "AMD",
     "NFLX", "PLTR", "UBER", "COIN", "MU", "INTC", "IBKR", "LLY", "PANW", "CRCL",
     "MSTR", "APP", "NBIS", "SNDK", "WLDN", "ADI", "CRWV", "SPCX", "SKHY",
 ]
+# Major AI + tech: semis/equipment, networking/servers, power for data centres, software.
+AI_TECH = [
+    "TSM", "ASML", "AMAT", "LRCX", "KLAC", "ARM", "MRVL", "QCOM", "TXN", "ANET",
+    "CSCO", "DELL", "ORCL", "IBM", "CRM", "NOW", "ADBE", "INTU", "SNOW", "NET",
+    "CRWD", "SHOP", "VRT", "ETN", "GEV", "CEG",
+]
+# Every other US-listed company above ~$300B market cap (Yahoo, 2026-11-18).
+# Re-check periodically — names near the line (PM, NVS, HSBC, INTC) drift in and out.
+MEGACAP_300B = [
+    "BRK-B", "WMT", "JPM", "V", "MA", "XOM", "CVX", "JNJ", "ABBV", "MRK", "UNH",
+    "COST", "KO", "PG", "PM", "HD", "BAC", "GE",
+]
+WATCHLIST = list(dict.fromkeys(CORE + AI_TECH + MEGACAP_300B))
 # Universe "new ideas" beyond the watchlist.
 UNIVERSE = [
     "QCOM", "ARM", "MRVL", "AMAT", "LRCX", "KLAC", "TSM", "ASML", "ORCL", "CRM",
@@ -67,16 +82,17 @@ def main():
     else:
         tickers = UNIVERSE  # fallback when no candidate list is passed
 
+    capex = current_capex()  # informational overlay (Stage 1) — never changes a stance
     rows = run_cycle(tickers, regime=regime, aggressive=aggressive)
 
     if mode == "digest":
-        msg = format_digest(rows, regime, date)
+        msg = format_digest(rows, regime, date, capex)
     else:
         title = "Aggressive Scan" if aggressive else "Opportunity Scan"
-        msg = format_opportunities(rows, regime, date, title) or f"🔭 {title} — {date}\nNo setups above WATCH today."
+        msg = format_opportunities(rows, regime, date, title, capex) or f"🔭 {title} — {date}\nNo setups above WATCH today."
     print(msg)
     print("\n<<<JSON>>>")
-    print(json.dumps({"mode": mode, "regime": reg, "date": date, "rows": rows}, default=str))
+    print(json.dumps({"mode": mode, "regime": reg, "capex": capex, "date": date, "rows": rows}, default=str))
 
 
 if __name__ == "__main__":

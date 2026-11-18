@@ -18,3 +18,12 @@ Prints the push-notification message + a `<<<JSON>>>` block for Notion.
 - `setup.sh` — cloud-env setup (installs yfinance); `project-instructions.md` — Project persona/rules
 - `SYSTEM.md` — Notion database IDs
 - `test_*.py` — parity/pipeline tests (`python3 test_engine.py` etc.)
+
+## AI capex overlay (Stage 1 — informational)
+`capex.py` classifies the hyperscaler capex cycle from Yahoo quarterly cash flow
+(MSFT, GOOGL, AMZN, META, ORCL): ACCELERATING / DECELERATING / CONTRACTING, a
+STRETCHED flag when capex > operating cash flow, and SMH vs its 50-DMA as price
+confirmation. Every row is tagged SPND/SUPP/MEM/NEO/PWR. It prints a header line
+in the digest/scans and a `capex` block in the JSON — it **never changes a stance**.
+Stage 2 (a WATCH cap on suppliers/neoclouds in a decelerating cycle) only after a
+backtest. Yahoo fundamentals have gaps; comparisons are like-for-like by date.

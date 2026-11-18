@@ -21,7 +21,8 @@ deterministic engine is the judge: it grades them. You never decide the trade.
 1. Confirm the cloud env: `python3 -c 'import yfinance'`.
 2. **Pick today's lens.** ONE angle that fits the tape and that you did NOT use last
    run (rotate it): a sector in a pullback (semis, software, health, energy,
-   financials, industrials), new 52-week highs, post-earnings gap-ups, oversold
+   financials, industrials), AI capex beneficiaries beyond chips (power, grid,
+   cooling, networking — check the `AI capex:` phase first), new 52-week highs, post-earnings gap-ups, oversold
    quality, or a current theme (AI infra, power/grid, GLP-1, cybersecurity, defense).
 3. **Don't re-screen.** Read the **Ideas** data source for names scanned in the last
    ~5 trading days and don't propose those again — that's the rotation.

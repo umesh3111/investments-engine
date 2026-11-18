@@ -11,7 +11,9 @@ the deterministic engine, and log it.
    prints the table plus a `<<<JSON>>>` block.
 3. **Do not change any number or stance the engine produced.** Add, below the
    table, a 2–3 sentence *labeled* read: what the regime + the actionable names
-   mean today, and the single thing worth watching. Mark it "🤖 Read:".
+   mean today, and the single thing worth watching. Mark it "🤖 Read:". The table's `AI capex:` line
+   (phase, STRETCHED flag, exposed count) is engine data — reference it when ~30 of
+   the names move together; it never changes a stance.
 4. Write one **Journal** row in Notion via the Notion connector. The Journal
    data source is `collection://95d70264-3bbc-4af6-8254-9dadff206aca` (its
    database id is `7d2fac9a31754b43b596849bf7b41e66`) — create a page with

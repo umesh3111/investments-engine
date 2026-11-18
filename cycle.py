@@ -12,6 +12,7 @@ Usage in the cloud env:
 from __future__ import annotations
 from typing import List, Optional
 from engine import evaluate, project_targets, ENGINE_CONFIG, AGGRESSIVE_CONFIG, ENGINE_CONFIG_VERSION
+from capex import exposure, format_capex_line, TAG_SHORT
 
 STANCE_ORDER = {"STRONG BUY": 0, "BUY": 1, "WATCH": 2, "AVOID": 3}
 STANCE_LABEL = {"STRONG BUY": "STRONG", "BUY": "BUY", "WATCH": "WATCH", "AVOID": "AVOID"}
@@ -39,7 +40,7 @@ def run_cycle(tickers: List[str], regime: str = "NEUTRAL",
         tg = project_targets(ta["price"], ta.get("atr14"), config)
         rows.append({"ticker": t, "ok": True, "stance": d.stance, "signal": d.signal,
                      "cc": d.confluence_count, "tier": d.tier, "price": ta["price"],
-                     "prices": d.prices, "targets": tg})
+                     "prices": d.prices, "targets": tg, "exposure": exposure(t)})
     return rows
 
 
@@ -47,35 +48,45 @@ def _rng(lo: float, hi: float) -> str:
     return f"{round(lo)}-{round(hi)}"
 
 
-def format_digest(rows: List[dict], regime: str, date_label: str) -> str:
+def format_digest(rows: List[dict], regime: str, date_label: str, capex: Optional[dict] = None) -> str:
     good = [r for r in rows if r.get("ok")]
     good.sort(key=lambda r: (STANCE_ORDER[r["stance"]], r["ticker"]))
     skipped = [r["ticker"] for r in rows if not r.get("ok")]
     actionable = sum(1 for r in good if r["stance"] in ("STRONG BUY", "BUY"))
+    # AVOIDs collapse to one line so a large watchlist stays phone-sized.
+    shown = [r for r in good if r["stance"] != "AVOID"]
+    avoid = [r["ticker"] for r in good if r["stance"] == "AVOID"]
 
-    head = f"{'Ticker':<8}{'Signal':<7} {'Price':>6}  {'1wk':<13}1mo"
+    head = f"{'Ticker':<8}{'Signal':<7}{'AI':<5}{'Price':>6}  {'1wk':<13}1mo"
     lines = [f"📋 Morning Signals — {date_label}",
-             f"Regime {regime} · {len(good)} analyzed · {actionable} actionable", "", "```", head]
-    for r in good:
+             f"Regime {regime} · {len(good)} analyzed · {actionable} actionable",
+             format_capex_line(capex, [r["ticker"] for r in rows]), "", "```", head]
+    for r in shown:
         t = r["targets"]
-        lines.append(f"{r['ticker']:<8}{STANCE_LABEL[r['stance']]:<7} "
+        lines.append(f"{r['ticker']:<8}{STANCE_LABEL[r['stance']]:<7}"
+                     f"{TAG_SHORT.get(r.get('exposure'), '-'):<5}"
                      f"${round(r['price']):>5}  {_rng(t['week_low'], t['week_high']):<13}"
                      f"{_rng(t['month_low'], t['month_high'])}")
     lines.append("```")
+    if avoid:
+        lines.append(f"AVOID ({len(avoid)}): {', '.join(avoid)}")
     if skipped:
         lines.append(f"Skipped (no data): {', '.join(skipped)}")
-    lines.append(f"📊 engine {ENGINE_CONFIG_VERSION} · ±ATR·√t projections · informational only")
+    lines.append(f"📊 engine {ENGINE_CONFIG_VERSION} · ±ATR·√t projections · AI = capex exposure "
+                 f"(SPND/SUPP/MEM/NEO/PWR) · informational only")
     return "\n".join(lines)
 
 
-def format_opportunities(rows: List[dict], regime: str, date_label: str, title: str = "Opportunity Scan") -> Optional[str]:
+def format_opportunities(rows: List[dict], regime: str, date_label: str, title: str = "Opportunity Scan",
+                         capex: Optional[dict] = None) -> Optional[str]:
     opps = [r for r in rows if r.get("ok") and r["stance"] != "AVOID"]
     if not opps:
         return None
     opps.sort(key=lambda r: (STANCE_ORDER[r["stance"]], r["ticker"]))
     pct = lambda v, e: f"{'+' if v >= e else '-'}{round(abs(v - e) / e * 100)}%"
     head = f"{'Ticker':<7}{'Signal':<7}{'Entry':<7}{'Stop':<6}{'Tgt':<6}"
-    lines = [f"🔭 {title} — {date_label}", f"Regime {regime} · {len(opps)} found", "", "```", head]
+    lines = [f"🔭 {title} — {date_label}", f"Regime {regime} · {len(opps)} found",
+             format_capex_line(capex, [r["ticker"] for r in opps]), "", "```", head]
     for r in opps:
         p = r["prices"]
         lines.append(f"{r['ticker']:<7}{STANCE_LABEL[r['stance']]:<7}"

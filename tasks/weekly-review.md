@@ -10,7 +10,9 @@ shifting, and should any rule change — proposed, never auto-applied.
    vs the S&P 500 over the same window (alpha), and whether the engine's stance
    was right. Record outcome + one-line lesson on each.
 3. Recompute the regime (`python3 run.py digest` prints it) and note any
-   shift vs last week.
+   shift vs last week — including the `AI capex:` phase. In earnings season, read
+   the hyperscalers' (MSFT, GOOGL, AMZN, META, ORCL) capex guidance and log a
+   labeled "🤖 Capex read" in Working Notes; the engine uses reported numbers only.
 4. **Propose** (do not apply) at most 3 bounded tweaks to the engine config
    (thresholds in `engine.py` / `AGGRESSIVE_CONFIG`) with the evidence for each —
    these go in **Working Notes** under "Proposed changes", awaiting the owner's go.

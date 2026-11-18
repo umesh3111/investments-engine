@@ -7,7 +7,8 @@ weight *on top of* the engine.
 **Steps.**
 1. `python3 -c 'import yfinance'` to confirm the cloud env.
 2. **Infer today's forward paradigm** yourself from recent news, macro and sector
-   rotation (rate path, which sectors lead, current themes). From that paradigm,
+   rotation (rate path, which sectors lead, current themes) and the engine's `AI capex:`
+   line (ACCELERATING/DECELERATING/CONTRACTING, STRETCHED = capex > op. cash). From that paradigm,
    **propose ~30–50 fresh, aggressive US candidates** — higher-beta names, recent
    movers, theme leaders — that you'd want a louder lens on. US only, liquid.
    (Avoid names already in the Notion Ideas data source from the last few days:
